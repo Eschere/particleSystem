@@ -22,18 +22,19 @@ img.onload = () => {
   }, {
     gravity: {
       x: 10,
-      y: 10
+      y: 80
     },
-    emitterX: -canvas.width / 2,
-    emitterXVariance: canvas.width / 2,
-    emitterYVariance: 200,
-    emitterY: -100,
-    maxParticles: 100,
-    speed: 10,
-    angle: Math.PI / 4,
+    emitterX: 100,
+    emitterXVariance: 0,
+    emitterYVariance: 0,
+    emitterY: 100,
+    maxParticles: 20,
+    speed: 100,
+    angle: 0,
+    angleVariance: Math.PI,
     startSize: 10,
-    startSizeVariance: 20,
-    lifespan: 10000
+    startSizeVariance: 0,
+    lifespan: 2000
   }, ctx) 
 
   particle.start();

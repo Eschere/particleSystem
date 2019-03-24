@@ -35,6 +35,7 @@ class ParticleSystem {
 
   // 粒子发射角度
   private angle: number
+  private angleVariance: number
 
   // 开始大小
   private startSize: number
@@ -93,6 +94,7 @@ class ParticleSystem {
     this.speed = config.speed;
 
     this.angle = config.angle;
+    this.angleVariance = config.angleVariance;
 
     this.startSize = config.startSize;
     this.startSizeVariance = config.startSizeVariance;
@@ -146,9 +148,11 @@ class ParticleSystem {
 
     particle.y = this.emitterY + randRange(this.emitterYVariance);
 
-    particle.velocityX = this.speed * Math.cos(this.angle);
+    let angle = this.angle + randRange(this.angleVariance);
 
-    particle.velocityY = this.speed * Math.sin(this.angle);
+    particle.velocityX = this.speed * Math.cos(angle);
+
+    particle.velocityY = this.speed * Math.sin(angle);
 
     particle.startSize = this.startSize + randRange(this.startSizeVariance);
 
@@ -203,10 +207,18 @@ class ParticleSystem {
         x,
         y,
         width,
-        height
+        height,
+        alpha
       } = particle;
 
-      this.ctx.drawImage(this.texture, x, y, width, height);
+      if (alpha !== 1) {
+        this.ctx.save();
+        this.ctx.globalAlpha = alpha;
+        this.ctx.drawImage(this.texture, x, y, width, height);
+        this.ctx.restore()
+      } else {
+        this.ctx.drawImage(this.texture, x, y, width, height);
+      }
     })
   }
 
@@ -269,8 +281,14 @@ class Particle {
     return this._startSize;
   }
 
-  get progress (): number {
-    return this.currentTime / this.lifespan;
+  get alpha (): number {
+    let progress = this.currentTime / this.lifespan;
+
+    if (progress > .8) {
+      let alpha: number = (1 - progress) / 0.2;
+      return alpha > 0 ? alpha : 0
+    }
+    return 1;
   }
 
   public setTextureInfo (config: {
@@ -278,28 +296,6 @@ class Particle {
     height: number
   }) {
     this.ratio = config.width / config.height;
-  }
-
-  public setProperty (config: any) {    
-    this.x = config.x;
-    this.y = config.y;
-
-    this.velocityX = config.velocityX;
-    this.velocityY = config.velocityY;
-  }
-
-  /**
-   * reset 
-   */
-  public reset () {
-    this.startX = 0;
-    this.startY = 0;
-
-    this.x = 0;
-    this.y = 0;
-
-    this.velocityX = 0;
-    this.velocityY = 0;
   }
 
   public get width (): number {
