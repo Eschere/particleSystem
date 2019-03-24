@@ -72,11 +72,11 @@ class ParticleSystem {
     config: string | any,
     ctx?: CanvasRenderingContext2D
   ) {
-    this.texture = texture;
-
     this.ctx = ctx;
 
-    this.initConfig(config, textureInfo);
+    this.changeTexture(texture, textureInfo);
+
+    this.changeConfig(config);
 
     this.emissionRate = this.lifespan / this.maxParticles;
 
@@ -84,7 +84,7 @@ class ParticleSystem {
   }
 
   // 参数初始化
-  private initConfig (config: any, textureInfo) {
+  public changeConfig (config: any) {
     this.gravityX = config.gravity.x;
     this.gravityY = config.gravity.y;
 
@@ -103,10 +103,6 @@ class ParticleSystem {
 
     this.startSize = config.startSize;
     this.startSizeVariance = config.startSizeVariance;
-
-    this.textureWidth = textureInfo.width;
-    this.textureHeight = textureInfo.height;
-
   }
 
   // 生成粒子
@@ -126,7 +122,7 @@ class ParticleSystem {
       particle = new Particle;
     }
 
-    particle.setTextureInfo({
+    particle.setTextureInfo(this.texture, {
       width: this.textureWidth,
       height: this.textureHeight
     })
@@ -141,6 +137,8 @@ class ParticleSystem {
     let index: number = this.particleList.indexOf(particle);
 
     this.particleList.splice(index, 1);
+
+    particle.texture = null;
 
     this.pool.push(particle);
   }
@@ -218,6 +216,7 @@ class ParticleSystem {
   private draw () {
     this.particleList.forEach((particle: Particle) => {
       let {
+        texture,
         x,
         y,
         width,
@@ -228,14 +227,24 @@ class ParticleSystem {
       if (alpha !== 1) {
         this.ctx.save();
         this.ctx.globalAlpha = alpha;
-        this.ctx.drawImage(this.texture, x, y, width, height);
+        this.ctx.drawImage(texture, x, y, width, height);
         // 兼容小程序
         (<any>this.ctx).draw && (<any>this.ctx).draw();
         this.ctx.restore()
       } else {
-        this.ctx.drawImage(this.texture, x, y, width, height);
+        this.ctx.drawImage(texture, x, y, width, height);
       }
     })
+  }
+
+  public changeTexture (texture: CanvasImageSource, textureInfo: {
+    width: number,
+    height: number
+  }) {
+    this.texture = texture;
+
+    this.textureWidth = textureInfo.width;
+    this.textureHeight = textureInfo.height;
   }
 
   // 周期性调用
@@ -307,6 +316,8 @@ class Particle {
   private _width: number
   private _height: number
 
+  public texture: CanvasImageSource
+
   set startSize (size: number) {
     this._startSize = size;
 
@@ -328,10 +339,11 @@ class Particle {
     return 1;
   }
 
-  public setTextureInfo (config: {
+  public setTextureInfo (texture: CanvasImageSource, config: {
     width: number,
     height: number
   }) {
+    this.texture = texture;
     this.ratio = config.width / config.height;
   }
 
