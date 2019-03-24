@@ -58,6 +58,11 @@ class ParticleSystem {
 
   private dt: number = 0
   private lastTime: number
+
+  private $stopping: boolean = false
+  private $stopped: boolean = true
+
+  public onstopped: () => undefined
   constructor (
     texture: CanvasImageSource,
     textureInfo: {
@@ -180,21 +185,30 @@ class ParticleSystem {
     this.frameTime += dt;
 
     // 是否需要新增粒子
-    while (this.frameTime > 0) {
-      if (this.particleList.length < this.maxParticles) {
-        this.addOneParticle()
-      }
+    if (!this.$stopping) {
+      while (this.frameTime > 0) {
+        if (this.particleList.length < this.maxParticles) {
+          this.addOneParticle()
+        }
 
-      this.frameTime -= this.emissionRate;
+        this.frameTime -= this.emissionRate;
+      }
     }
 
     // 更新粒子状态或移除粒子
-    this.particleList.forEach((particle: Particle) => {
+    let temp: Array<Particle> = [...this.particleList];
+
+    temp.forEach((particle: Particle) => {
       if (particle.currentTime < particle.lifespan) {
         this.updateParticle(particle, dt);
         particle.currentTime += dt;
       } else {
         this.removeOneParticle(particle);
+
+        if (this.$stopping && this.particleList.length === 0) {
+          this.$stopped = true;
+          this.onstopped && this.onstopped();
+        }
       }
     })
 
@@ -224,12 +238,17 @@ class ParticleSystem {
     })
   }
 
+  // 周期性调用
   private circleDraw (dt: number) {
+    if (this.$stopped) {
+      return;
+    }
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.render(dt);
 
     if (requestAnimationFrame) {
       requestAnimationFrame((dt: number) => {
+        console.log(dt);
         this.circleDraw(dt - this.dt);
         this.dt = dt;
       })
@@ -243,8 +262,24 @@ class ParticleSystem {
   }
 
   public start () {
+    this.$stopping = false;
+
+    if (!this.$stopped) {
+      return;
+    }
+
     this.lastTime = Date.now();
+
+    this.$stopped = false;
     this.circleDraw(0);
+  }
+
+  public stop () {
+    this.$stopping = true;
+  }
+
+  get isStop () {
+    return this.$stopped;
   }
 }
 

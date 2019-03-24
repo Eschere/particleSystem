@@ -39,5 +39,13 @@ img.onload = () => {
 
   particle.start();
 
+  setTimeout(() => {
+    particle.stop()
+  }, 2000)
+
+  document.onclick = function () {
+    particle.start()
+  }
+
   // ctx.drawImage(img, 100, 100)
 }
