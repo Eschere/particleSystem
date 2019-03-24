@@ -211,6 +211,9 @@ class ParticleSystem {
     })
 
     this.draw();
+
+    // 兼容小程序
+    (<any>this.ctx).draw && (<any>this.ctx).draw();
   }
 
   private draw () {
@@ -228,8 +231,6 @@ class ParticleSystem {
         this.ctx.save();
         this.ctx.globalAlpha = alpha;
         this.ctx.drawImage(texture, x, y, width, height);
-        // 兼容小程序
-        (<any>this.ctx).draw && (<any>this.ctx).draw();
         this.ctx.restore()
       } else {
         this.ctx.drawImage(texture, x, y, width, height);
