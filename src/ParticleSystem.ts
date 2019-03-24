@@ -176,7 +176,7 @@ class ParticleSystem {
     particle.y += particle.velocityY * dt;
   }
 
-  private update (dt: number) {
+  public render (dt: number) {
     this.frameTime += dt;
 
     // 是否需要新增粒子
@@ -198,10 +198,10 @@ class ParticleSystem {
       }
     })
 
-    this.render();
+    this.draw();
   }
 
-  public render () {
+  private draw () {
     this.particleList.forEach((particle: Particle) => {
       let {
         x,
@@ -215,6 +215,8 @@ class ParticleSystem {
         this.ctx.save();
         this.ctx.globalAlpha = alpha;
         this.ctx.drawImage(this.texture, x, y, width, height);
+        // 兼容小程序
+        (<any>this.ctx).draw && (<any>this.ctx).draw();
         this.ctx.restore()
       } else {
         this.ctx.drawImage(this.texture, x, y, width, height);
@@ -223,8 +225,8 @@ class ParticleSystem {
   }
 
   private circleDraw (dt: number) {
-    this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.update(dt);
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.render(dt);
 
     if (requestAnimationFrame) {
       requestAnimationFrame((dt: number) => {
