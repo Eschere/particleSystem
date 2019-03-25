@@ -178,7 +178,9 @@ class ParticleSystem {
 
     particle.startSize = this.startSize + randRange(this.startSizeVariance);
 
-    particle.startSize < 0 ? particle.startSize = 0.01 : null;
+    if (particle.startSize < 0) {
+      particle.startSize = 0.01
+    }
 
     particle.scale = particle.startSize / this.startSize
 
@@ -199,10 +201,9 @@ class ParticleSystem {
   }
 
   public render (dt: number) {
-    this.frameTime += dt;
-
     // 是否需要新增粒子
     if (!this.$stopping) {
+      this.frameTime += dt;
       while (this.frameTime > 0) {
         if (this.particleList.length < this.maxParticles) {
           this.addOneParticle()
@@ -247,6 +248,7 @@ class ParticleSystem {
         rotation
       } = particle;
 
+      // 粒子旋转和透明之后画上画布
       let halfWidth = width / 2,
         halfHeight = height /2;
 
@@ -296,9 +298,10 @@ class ParticleSystem {
     this.render(dt);
 
     if (requestAnimationFrame) {
-      requestAnimationFrame((dt: number) => {
-        this.circleDraw(dt - this.dt);
-        this.dt = dt;
+      requestAnimationFrame(() => {
+        let now = Date.now();
+        this.circleDraw(now - this.lastTime);
+        this.lastTime = now;
       })
     } else {
       setTimeout(() => {
