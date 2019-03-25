@@ -26,11 +26,13 @@ img.onload = () => {
     emitterY: -10,
     emitterXVariance: 200,
     emitterYVariance: 10,
-    maxParticles: 50,
+    maxParticles: 20,
+    endRotation: Math.PI * 2,
+    endRotationVariance: Math.PI / 2,
     speed: 50,
-    angle: 0,
-    angleVariance: Math.PI,
-    startSize: 10,
+    angle: Math.PI / 2,
+    angleVariance: Math.PI / 2,
+    startSize: 15,
     startSizeVariance: 5,
     lifespan: 5000
   }, ctx) 

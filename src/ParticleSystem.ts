@@ -12,7 +12,9 @@ class ParticleSystem {
   private textureWidth: number
   private textureHeight: number
 
-  private config: string | any
+  private canvasWidth: number
+  private canvasHeight: number
+
   private ctx?: CanvasRenderingContext2D
 
   // 加速度
@@ -36,6 +38,10 @@ class ParticleSystem {
   // 粒子发射角度
   private angle: number
   private angleVariance: number
+
+  // 旋转角度区间
+  private endRotation: number
+  private endRotationVariance: number
 
   // 开始大小
   private startSize: number
@@ -70,8 +76,16 @@ class ParticleSystem {
       height: number
     },
     config: string | any,
-    ctx?: CanvasRenderingContext2D
+    ctx?: CanvasRenderingContext2D,
+    canvasInfo?: {
+      width: number,
+      height: number
+    }
   ) {
+    if (canvasInfo) {
+      this.canvasWidth = canvasInfo.width;
+      this.canvasHeight = canvasInfo.height;
+    }
     this.ctx = ctx;
 
     this.changeTexture(texture, textureInfo);
@@ -100,6 +114,9 @@ class ParticleSystem {
 
     this.angle = config.angle;
     this.angleVariance = config.angleVariance;
+
+    this.endRotation = config.endRotation;
+    this.endRotationVariance = config.endRotationVariance;
 
     this.startSize = config.startSize;
     this.startSizeVariance = config.startSizeVariance;
@@ -150,6 +167,8 @@ class ParticleSystem {
     particle.x = this.emitterX + randRange(this.emitterXVariance);
 
     particle.y = this.emitterY + randRange(this.emitterYVariance);
+
+    particle.endRotation = this.endRotation + randRange(this.endRotationVariance);
 
     let angle = this.angle + randRange(this.angleVariance);
 
@@ -224,17 +243,27 @@ class ParticleSystem {
         y,
         width,
         height,
-        alpha
+        alpha,
+        rotation
       } = particle;
 
+      let halfWidth = width / 2,
+        halfHeight = height /2;
+
+      this.ctx.save();
+
+      this.ctx.translate(x + halfWidth, y + halfHeight);
+
+      this.ctx.rotate(rotation);
+
       if (alpha !== 1) {
-        this.ctx.save();
         this.ctx.globalAlpha = alpha;
-        this.ctx.drawImage(texture, x, y, width, height);
-        this.ctx.restore()
+        this.ctx.drawImage(texture, -halfWidth, -halfHeight, width, height);
       } else {
-        this.ctx.drawImage(texture, x, y, width, height);
+        this.ctx.drawImage(texture, -halfWidth, -halfHeight, width, height);
       }
+
+      this.ctx.restore();
     })
   }
 
@@ -253,12 +282,21 @@ class ParticleSystem {
     if (this.$stopped) {
       return;
     }
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+    let width: number, height: number;
+    if (this.canvasWidth) {
+      width = this.canvasWidth;
+      height = this.canvasHeight;
+    } else if (this.ctx.canvas) {
+      width  = this.ctx.canvas.width;
+      height = this.ctx.canvas.width;
+    }
+
+    this.ctx.clearRect(0, 0, width, height);
     this.render(dt);
 
     if (requestAnimationFrame) {
       requestAnimationFrame((dt: number) => {
-        console.log(dt);
         this.circleDraw(dt - this.dt);
         this.dt = dt;
       })
@@ -311,11 +349,16 @@ class Particle {
   public startSizeVariance: number
   public scale: number
 
+  public endRotation: number
+
   private ratio: number
 
   // 输入的图像宽高
   private _width: number
   private _height: number
+
+  // 
+  private _rotation: number
 
   public texture: CanvasImageSource
 
@@ -330,14 +373,22 @@ class Particle {
     return this._startSize;
   }
 
+  private get progress (): number {
+    return this.currentTime / this.lifespan;
+  }
+
   get alpha (): number {
-    let progress = this.currentTime / this.lifespan;
+    let progress = this.progress;
 
     if (progress > .8) {
       let alpha: number = (1 - progress) / 0.2;
       return alpha > 0 ? alpha : 0
     }
     return 1;
+  }
+
+  get rotation (): number {
+    return this.endRotation * this.progress;
   }
 
   public setTextureInfo (texture: CanvasImageSource, config: {
