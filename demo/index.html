@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="main.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="app">
+
+  </div>
+
+  <script>
+  new Vue({
+    el: '#app',
+    data: {
+      gravity: {
+        x: 10,
+        y: 80
+      },
+      emitterX: 200,
+      emitterY: -10,
+      emitterXVariance: 200,
+      emitterYVariance: 10,
+      maxParticles: 10,
+      endRotation: 2,
+      endRotationVariance: 50,
+      speed: 50,
+      angle: Math.PI / 2,
+      angleVariance: Math.PI / 2,
+      startSize: 15,
+      startSizeVariance: 5,
+      lifespan: 5000
+    },
+    mounted () {
+      let canvas = document.querySelector('canvas');
+      let ctx = canvas.getContext('2d');
+
+
+    }
+  })
+  </script>
+
+</body>
+</html>

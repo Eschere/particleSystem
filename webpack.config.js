@@ -1,9 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env) => ({
-  entry: env.TEST ? './test/main.ts' : './src/main.ts',
+  entry: env.TEST ? './test/main.ts' : './src/ParticleSystem.ts',
   output: {
-    filename: 'main.js'
+    filename: 'main.js',
+    libraryTarget: env.PRO ? 'umd' : 'var',
+    globalObject:  env.PRO ? 'this' : 'window'
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -17,7 +19,7 @@ module.exports = (env) => ({
     ]
   },
   devtool: 'source-map',
-  plugins: [new HtmlWebpackPlugin({
+  plugins: env.PRO ? [] : [new HtmlWebpackPlugin({
     template: './index.html'
   })]
 });

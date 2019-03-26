@@ -11,7 +11,7 @@ const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 
 const img: HTMLImageElement = document.createElement('img');
 
-img.src = './src/timg.png';
+img.src = './test/timg.png';
 
 img.onload = () => {
   const particle = new ParticleSystem(img, {
@@ -46,7 +46,7 @@ img.onload = () => {
   document.onclick = function () {
     const img: HTMLImageElement = document.createElement('img');
 
-    img.src = './src/rain.png';
+    img.src = './test/rain.png';
     
     img.onload = () => {
       particle.changeTexture(img, {

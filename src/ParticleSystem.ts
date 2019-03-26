@@ -297,7 +297,7 @@ class ParticleSystem {
     this.ctx.clearRect(0, 0, width, height);
     this.render(dt);
 
-    if (requestAnimationFrame) {
+    if (typeof requestAnimationFrame !== 'undefined') {
       requestAnimationFrame(() => {
         let now = Date.now();
         this.circleDraw(now - this.lastTime);
@@ -411,4 +411,7 @@ class Particle {
   }
 }
 
+export {
+  ParticleSystem
+}
 export default ParticleSystem;
