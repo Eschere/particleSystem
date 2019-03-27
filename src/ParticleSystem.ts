@@ -62,13 +62,15 @@ class ParticleSystem {
   // 计时器
   private frameTime: number = 0
 
-  private dt: number = 0
+  // 粒子上次重绘的时间
   private lastTime: number
 
   private $stopping: boolean = false
   private $stopped: boolean = true
 
+  // 完全停止时的回调
   public onstopped: () => undefined
+
   constructor (
     texture: CanvasImageSource,
     textureInfo: {
@@ -76,7 +78,7 @@ class ParticleSystem {
       height: number
     },
     config: string | any,
-    ctx?: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     canvasInfo?: {
       width: number,
       height: number
@@ -359,9 +361,6 @@ class Particle {
   // 输入的图像宽高
   private _width: number
   private _height: number
-
-  // 
-  private _rotation: number
 
   public texture: CanvasImageSource
 

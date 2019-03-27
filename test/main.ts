@@ -14,28 +14,33 @@ const img: HTMLImageElement = document.createElement('img');
 img.src = './test/timg.png';
 
 img.onload = () => {
-  const particle = new ParticleSystem(img, {
-    width: img.width,
-    height: img.height
-  }, {
-    gravity: {
-      x: 10,
-      y: 80
+  const particle = new ParticleSystem(
+    img,
+    {
+      width: img.width,
+      height: img.height
     },
-    emitterX: 200,
-    emitterY: -10,
-    emitterXVariance: 200,
-    emitterYVariance: 10,
-    maxParticles: 10,
-    endRotation: 2,
-    endRotationVariance: 50,
-    speed: 50,
-    angle: Math.PI / 2,
-    angleVariance: Math.PI / 2,
-    startSize: 15,
-    startSizeVariance: 5,
-    lifespan: 5000
-  }, ctx) 
+    {
+      gravity: {
+        x: 10,
+        y: 80
+      },
+      emitterX: 200,
+      emitterY: -10,
+      emitterXVariance: 200,
+      emitterYVariance: 10,
+      maxParticles: 10,
+      endRotation: 2,
+      endRotationVariance: 50,
+      speed: 50,
+      angle: Math.PI / 2,
+      angleVariance: Math.PI / 2,
+      startSize: 15,
+      startSizeVariance: 5,
+      lifespan: 5000
+    },
+    ctx
+  ) 
 
   particle.start();
 
@@ -73,6 +78,4 @@ img.onload = () => {
       })
     }
   }
-
-  // ctx.drawImage(img, 100, 100)
 }

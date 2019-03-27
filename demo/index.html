@@ -11,6 +11,12 @@
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src="main.js"></script>
   <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
@@ -43,7 +49,45 @@
     mounted () {
       let canvas = document.querySelector('canvas');
       let ctx = canvas.getContext('2d');
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      let img = new Image()
+      img.src = './rain.png';
+      img.onload = function () {
+        let particle = new ParticleSystem(
+          img,
+          {
+            width: img.width,
+            height: img.height
+          },
+          {
+            gravity: {
+              x: 10,
+              y: 180
+            },
+            emitterX: 200,
+            emitterY: -10,
+            emitterXVariance: 200,
+            emitterYVariance: 10,
+            maxParticles: 10,
+            endRotation: 0,
+            endRotationVariance: 0,
+            speed: 100,
+            angle: Math.PI / 2,
+            angleVariance: 0,
+            startSize: 3,
+            startSizeVariance: 2,
+            lifespan: 5000
+          },
+          ctx
+        )
+
+        particle.start()
+      }
 
     }
   })
