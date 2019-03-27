@@ -1,6 +1,6 @@
 ### 粒子系统
-一款基于canvas 2d的粒子系统，支持微信小程序
-小程序不支持获取canvas对象和其他dom操作, 所有粒子系统不包含canvas和context创建过程。
+一款基于canvas 2d的粒子系统，支持微信小程序。  
+小程序不支持获取canvas对象和其他dom操作, 所以粒子系统不包含canvas和context创建过程。
 
 ### 命令
 ```bash
@@ -22,9 +22,7 @@ const ParticleSystem = require('ParticleSystem');
 
 
 #### 基础用法
-canvas创建和属性设置需要开发者自己完成
-
-粒子系统需要接收canvas画布上下文对象ctx
+canvas创建和属性设置需要开发者自己完成，粒子系统需要接收canvas画布上下文对象ctx
 
 ```js
 const ctx = canvas.getContext('2d');
@@ -51,12 +49,15 @@ img.onload = function () {
 ```
 #### 构造函数
 
-`new ParticleSystem(texture, textureInfo, config, [ctx, [canvasInfo]])`
-`texture`: 粒子纹理，在浏览器环境中为具体的图形对象`Image`,在微信小程序环境为本地图片路径。
-`textureInfo`: `{width: number, height: number}` 粒子系统不提供兼容性的图片属性获取方法，所以需要手动传入图片的尺寸，以便进行等比例缩放。
-`config`: 
+`new ParticleSystem(texture, textureInfo, config, [ctx, [canvasInfo]])`。 
+
+`texture`: 粒子纹理，在浏览器环境中为具体的图形对象`Image`,在微信小程序环境为本地图片路径。 
+
+`textureInfo`: `{width: number, height: number}` 粒子系统不提供兼容性的图片属性获取方法，所以需要手动传入图片的尺寸，以便进行等比例缩放。 
+
+
 ```js
-{
+config: {
   gravity: {
     x: 10, // 横向加速度
     y: 80 // 纵向加速度
@@ -76,7 +77,8 @@ img.onload = function () {
   lifespan: 5000 // 单个粒子生命周期
 }
 ```
-以上参数皆为必填项。
+以上参数皆为必填项。 
+
 
 `ctx`: 画布上下文对象
 `canvasInfo`: `{width: number, height: number}`canvas尺寸信息，以确保画布能被整体刷新，以下情况可以省略此参数：
