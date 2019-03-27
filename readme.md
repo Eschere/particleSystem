@@ -55,9 +55,9 @@ img.onload = function () {
 
 `textureInfo`: `{width: number, height: number}` 粒子系统不提供兼容性的图片属性获取方法，所以需要手动传入图片的尺寸，以便进行等比例缩放。 
 
-
+`config`:
 ```js
-config: {
+{
   gravity: {
     x: 10, // 横向加速度
     y: 80 // 纵向加速度
