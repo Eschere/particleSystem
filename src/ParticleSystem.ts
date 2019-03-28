@@ -78,7 +78,7 @@ class ParticleSystem {
       height: number
     },
     config: string | any,
-    ctx: CanvasRenderingContext2D,
+    ctx?: CanvasRenderingContext2D,
     canvasInfo?: {
       width: number,
       height: number
@@ -202,7 +202,7 @@ class ParticleSystem {
     particle.y += particle.velocityY * dt;
   }
 
-  public render (dt: number) {
+  public update (dt: number) {
     // 是否需要新增粒子
     if (!this.$stopping) {
       this.frameTime += dt;
@@ -231,9 +231,11 @@ class ParticleSystem {
         }
       }
     })
+  }
 
+  public render (dt: number) {
+    this.update(dt);
     this.draw();
-
     // 兼容小程序
     (<any>this.ctx).draw && (<any>this.ctx).draw();
   }
@@ -314,6 +316,51 @@ class ParticleSystem {
     }
   }
 
+  // 循环更新数据
+  private circleData (dt: number, onupdate: ([]: Array<any>) => void) {
+    if (this.$stopped) {
+      return;
+    }
+
+    this.update(dt);
+
+    let data = this.particleList.map((particle: Particle) => {
+      let {
+        x,
+        y,
+        width,
+        height,
+        alpha,
+        rotation
+      } = particle;
+
+      return {
+        x,
+        y,
+        width,
+        height,
+        alpha,
+        rotation
+      }
+    })
+
+    onupdate(data);
+
+    if (typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(() => {
+        let now = Date.now();
+        this.circleData(now - this.lastTime, onupdate);
+        this.lastTime = now;
+      })
+    } else {
+      setTimeout(() => {
+        let now = Date.now();
+        this.circleData(now - this.lastTime, onupdate);
+        this.lastTime = now;
+      }, 17)
+    }
+  }
+
   public start () {
     this.$stopping = false;
 
@@ -333,6 +380,20 @@ class ParticleSystem {
 
   get isStop () {
     return this.$stopped;
+  }
+
+  // 启动仅更新数据模式
+  public startOnlyData (onupdate: ([]:Array<any>) => void) {
+    this.$stopping = false;
+
+    if (!this.$stopped) {
+      return;
+    }
+
+    this.lastTime = Date.now();
+
+    this.$stopped = false;
+    this.circleData(0, onupdate);
   }
 }
 
