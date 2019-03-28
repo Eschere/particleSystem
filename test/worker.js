@@ -1,4 +1,4 @@
-// import ParticleSystem from '../src/ParticleSystem'
+// work中使用打包的js文件请先运行yarn build
 importScripts('/dist/main.js')
 
 let particle

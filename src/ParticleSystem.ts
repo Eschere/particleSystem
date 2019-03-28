@@ -94,8 +94,6 @@ class ParticleSystem {
 
     this.changeConfig(config);
 
-    this.emissionRate = this.lifespan / this.maxParticles;
-
     this.createParticlePool();
   }
 
@@ -122,6 +120,8 @@ class ParticleSystem {
 
     this.startSize = config.startSize;
     this.startSizeVariance = config.startSizeVariance;
+
+    this.emissionRate = this.lifespan / this.maxParticles;
   }
 
   // 生成粒子
