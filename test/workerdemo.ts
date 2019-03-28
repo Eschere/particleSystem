@@ -1,5 +1,3 @@
-import ParticleSystem from '../src/ParticleSystem'
-
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 
 canvas.width = (<Window>window).innerWidth;
@@ -15,6 +13,39 @@ img.src = './test/timg.png';
 img.onload = () => {
   const worker = new Worker('./test/worker.js')
 
+  worker.postMessage({
+    action: 'create',
+    textureInfo: {
+      width: img.width,
+      height: img.height
+    },
+    config: {
+      gravity: {
+        x: 10,
+        y: 80
+      },
+      emitterX: 200,
+      emitterY: -10,
+      emitterXVariance: 200,
+      emitterYVariance: 10,
+      maxParticles: 50,
+      endRotation: Math.PI * 4,
+      endRotationVariance: 0,
+      speed: 50,
+      angle: Math.PI / 2,
+      angleVariance: Math.PI / 2,
+      startSize: 15,
+      startSizeVariance: 5,
+      lifespan: 5000
+    }
+  })
+
+  // 开始
+  worker.postMessage({
+    action: 'start'
+  })
+
+  // 主线程监听子线程传送的数据进行渲染
   worker.addEventListener('message', (data) => {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     data.data.forEach(particle => {

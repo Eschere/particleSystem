@@ -51,4 +51,6 @@
 //   })
 // }
 
-import './simple';
+// import './simple';
+
+import './workerdemo';

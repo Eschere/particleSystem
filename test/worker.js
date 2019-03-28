@@ -1,37 +1,33 @@
-// work中使用打包的js文件请先运行yarn build
+// work中使用打包的js文件，请先运行yarn build
 importScripts('/dist/main.js')
 
 let particle
 
-addEventListener('')
+addEventListener('message', (event) => {
+  let data = event.data;
 
-const particle = new ParticleSystem(
-  null,
-  {
-    width: 100,
-    height: 200
-  },
-  {
-    gravity: {
-      x: 10,
-      y: 80
-    },
-    emitterX: 200,
-    emitterY: -10,
-    emitterXVariance: 200,
-    emitterYVariance: 10,
-    maxParticles: 10,
-    endRotation: 2,
-    endRotationVariance: 50,
-    speed: 50,
-    angle: Math.PI / 2,
-    angleVariance: Math.PI / 2,
-    startSize: 15,
-    startSizeVariance: 5,
-    lifespan: 5000
+  let action = data.action;
+
+  switch (action) {
+    case 'create':
+      create(data.textureInfo, data.config);
+      break;
+    case 'start':
+      particle.startOnlyData(postMessage);
+      break;
+    case 'stop':
+      particle.stop();
   }
-)
-
-particle.startOnlyData((ParticleList) => {
-  postMessage(ParticleList)
 })
+
+function create (textureInfo, config) {
+  particle = new ParticleSystem(
+    null,
+    textureInfo,
+    config
+  )
+}
+
+// particle.startOnlyData((ParticleList) => {
+//   postMessage(ParticleList)
+// })
