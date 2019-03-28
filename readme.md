@@ -12,6 +12,9 @@ yarn test
 
 // 编译ts
 yarn build
+
+// 打包umd版本
+yarn build:umd
 ```
 ### 用法
 #### 导入粒子系统
@@ -79,8 +82,9 @@ img.onload = function () {
 ```
 以上参数皆为必填项。 
 
+`ctx`: 画布上下文对象，以下情况可以不传该参数：
+1. 使用`particle.startOnlyData(cb)`方式启动仅获取数据模式。
 
-`ctx`: 画布上下文对象
 `canvasInfo`: `{width: number, height: number}`canvas尺寸信息，以确保画布能被整体刷新，以下情况可以省略此参数：
 1. 你使用`particle.update(dt)`的方式重绘画布，而不是`particle.start()`
 2. 你的运行环境中支持`ctx.clearRect(0, 0)`清除画布内容

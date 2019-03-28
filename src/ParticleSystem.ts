@@ -326,6 +326,7 @@ class ParticleSystem {
 
     let data = this.particleList.map((particle: Particle) => {
       let {
+        texture,
         x,
         y,
         width,
@@ -335,6 +336,7 @@ class ParticleSystem {
       } = particle;
 
       return {
+        texture,
         x,
         y,
         width,
@@ -470,8 +472,8 @@ class Particle {
     return this._height;
   }
 }
+export default ParticleSystem;
 
 export {
   ParticleSystem
 }
-export default ParticleSystem;
