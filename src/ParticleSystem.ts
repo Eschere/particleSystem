@@ -94,8 +94,6 @@ class ParticleSystem {
 
     this.changeConfig(config);
 
-    this.emissionRate = this.lifespan / this.maxParticles;
-
     this.createParticlePool();
   }
 
@@ -122,6 +120,8 @@ class ParticleSystem {
 
     this.startSize = config.startSize;
     this.startSizeVariance = config.startSizeVariance;
+
+    this.emissionRate = this.lifespan / this.maxParticles;
   }
 
   // 生成粒子
@@ -326,6 +326,7 @@ class ParticleSystem {
 
     let data = this.particleList.map((particle: Particle) => {
       let {
+        texture,
         x,
         y,
         width,
@@ -335,6 +336,7 @@ class ParticleSystem {
       } = particle;
 
       return {
+        texture,
         x,
         y,
         width,
@@ -470,8 +472,8 @@ class Particle {
     return this._height;
   }
 }
+export default ParticleSystem;
 
 export {
   ParticleSystem
 }
-export default ParticleSystem;

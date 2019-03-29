@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = (env) => ({
   entry: env.TEST ? './test/main.ts' : './src/ParticleSystem.ts',
   output: {
-    filename: 'main.js',
+    filename: env.TEST ? 'main.js' : 'ParticleSystem.js',
     libraryTarget: env.PRO ? 'umd' : 'var',
     globalObject:  env.PRO ? 'this' : 'window'
   },
