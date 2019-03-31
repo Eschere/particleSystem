@@ -1,7 +1,3 @@
-function rand (min: number, max: number): number {
-    return Math.random() * (max - min) + min;
-}
-
 function randRange (range: number): number {
   range = Math.abs(range);
   return Math.random() * range * 2 - range;
@@ -46,7 +42,7 @@ class ParticleSystem {
   // 开始大小
   private startSize: number
   private startSizeVariance: number
-  
+
   // 粒子生命周期
   private lifespan: number
 
@@ -184,9 +180,7 @@ class ParticleSystem {
       particle.startSize = 0.01
     }
 
-    particle.scale = particle.startSize / this.startSize
-
-    particle.startSizeVariance = this.startSizeVariance;
+    particle.scale = particle.startSize / this.startSize;
 
     return particle;
   }
@@ -400,9 +394,6 @@ class ParticleSystem {
 }
 
 class Particle {
-  public startX: number
-  public startY: number
-
   public lifespan: number
 
   public velocityX: number
@@ -414,7 +405,6 @@ class Particle {
   public currentTime: number
 
   private _startSize: number
-  public startSizeVariance: number
   public scale: number
 
   public endRotation: number
