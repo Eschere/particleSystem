@@ -104,3 +104,13 @@ particle.stop()
 ```js
 particle.onstopped
 ```
+
+### 改变参数
+```js
+particle.changeConfig(config)
+```
+
+### 改变纹理
+```js
+particle.changeTexture(texture, textureInfo)
+```
