@@ -88,5 +88,19 @@ img.onload = function () {
 `canvasInfo`: `{width: number, height: number}`canvas尺寸信息，以确保画布能被整体刷新，以下情况可以省略此参数：
 1. 你使用`particle.update(dt)`的方式重绘画布，而不是`particle.start()`
 2. 你的运行环境中支持`ctx.clearRect(0, 0)`清除画布内容
-3. 你的运行环境中支持`ctx`获取`canvas`信息（小程序显然不支持）
+3. 微信小程序中支持ctx.draw()清楚上次绘制的画布信息，所以也不需要传
 
+### 开始运行
+```js
+particle.start()
+```
+
+### 结束运行
+```js
+particle.stop()
+```
+
+### 回调函数
+```js
+particle.onstopped
+```

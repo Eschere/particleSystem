@@ -1,5 +1,5 @@
-// work中使用打包的js文件，请先运行yarn build
-importScripts('/dist/main.js')
+// work中使用打包的js文件，请先运行yarn build:umd
+importScripts('/dist/ParticleSystem.js')
 
 let particle
 

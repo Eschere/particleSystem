@@ -28,7 +28,7 @@ img.onload = () => {
       emitterY: -10,
       emitterXVariance: 200,
       emitterYVariance: 10,
-      maxParticles: 1,
+      maxParticles: 50,
       endRotation: 2,
       endRotationVariance: 50,
       speed: 50,

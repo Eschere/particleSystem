@@ -227,11 +227,35 @@ class ParticleSystem {
     })
   }
 
-  public render (dt: number) {
+  public render (dt: number, clear: boolean = false) {
+
     this.update(dt);
-    this.draw();
-    // 兼容小程序
-    (<any>this.ctx).draw && (<any>this.ctx).draw();
+
+    if (typeof (<any>this.ctx).draw !== 'undefined') {
+      
+      if (clear) {
+        this.draw();
+        (<any>this.ctx).draw();
+      } else {
+        this.draw();
+        (<any>this.ctx).draw(true);
+      }
+    } else {
+      if (clear) {
+        let width: number, height: number;
+        if (this.canvasWidth) {
+          width = this.canvasWidth;
+          height = this.canvasHeight;
+        } else if (this.ctx.canvas) {
+          width  = this.ctx.canvas.width;
+          height = this.ctx.canvas.width;
+        }
+        this.ctx.clearRect(0, 0, width, height);
+        this.draw();
+      } else {
+        this.draw();
+      }
+    }
   }
 
   private draw () {
@@ -283,17 +307,7 @@ class ParticleSystem {
       return;
     }
 
-    let width: number, height: number;
-    if (this.canvasWidth) {
-      width = this.canvasWidth;
-      height = this.canvasHeight;
-    } else if (this.ctx.canvas) {
-      width  = this.ctx.canvas.width;
-      height = this.ctx.canvas.width;
-    }
-
-    this.ctx.clearRect(0, 0, width, height);
-    this.render(dt);
+    this.render(dt, true);
 
     if (typeof requestAnimationFrame !== 'undefined') {
       requestAnimationFrame(() => {
