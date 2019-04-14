@@ -3,6 +3,10 @@ function randRange (range: number): number {
   return Math.random() * range * 2 - range;
 }
 
+function twoDecimal (number: number) {
+  return Number(number.toFixed(2));
+}
+
 class ParticleSystem {
   private texture: CanvasImageSource
   private textureWidth: number
@@ -63,6 +67,9 @@ class ParticleSystem {
 
   private $stopping: boolean = false
   private $stopped: boolean = true
+
+  // 力量体列表
+  private bodyList: Array<Body> = []
 
   // 完全停止时的回调
   public onstopped: () => undefined
@@ -188,9 +195,27 @@ class ParticleSystem {
   public updateParticle (particle: Particle, dt: number) {
     dt = dt / 1000;
 
-    particle.velocityX += this.gravityX * particle.scale * dt;
+    if (this.bodyList.length) {
+      this.bodyList.forEach(body => {
+        let {
+          forceX,
+          forceY,
+          stop
+        } = body.getAcceleration(particle);
 
-    particle.velocityY += this.gravityY * particle.scale * dt;
+        if (stop) {
+          particle.velocityX = 0
+          particle.velocityY = 0
+        } else {
+          particle.velocityX += (this.gravityX * particle.scale + forceX) * dt;
+          particle.velocityY += (this.gravityY * particle.scale + forceY)* dt;
+        }
+      })
+    } else {
+      particle.velocityX += this.gravityX * particle.scale * dt;
+      particle.velocityY += this.gravityY * particle.scale * dt;
+    }
+
     particle.x += particle.velocityX * dt;
 
     particle.y += particle.velocityY * dt;
@@ -405,6 +430,29 @@ class ParticleSystem {
     this.$stopped = false;
     this.circleData(0, onupdate);
   }
+
+  // 增加力量体
+  public addBody (x: number, y: number, widened: number, scale: number, attract: boolean = false) {
+    let body = new Body(x, y, widened, scale, attract);
+
+    this.bodyList.push(body)
+
+    return body;
+  }
+
+  public removeBody (body: Body) {
+    if (body instanceof Body) {
+      let index = this.bodyList.findIndex(item => {
+        return item === body;
+      })
+
+      if (index > -1) {
+        this.bodyList.splice(index, 1);
+      }
+    } else {
+      throw Error('The first argment is not instanceof Body');
+    }
+  }
 }
 
 class Particle {
@@ -476,6 +524,100 @@ class Particle {
     return this._height;
   }
 }
+
+class Body {
+  private widened: number
+
+  private innerWidened: number
+
+  private attract: boolean = true
+
+  private x: number
+
+  private y: number
+
+  private scale: number
+
+  /**
+   * 
+   * @param x 位置x
+   * @param y 位置y
+   * @param widened 作用范围
+   * @param scale 力量系数
+   * @param attract 作用力类型 默认false，吸引力
+   */
+  constructor (x: number, y: number, widened: number, scale: number, attract: boolean = false) {
+    this.setbody(x, y, widened, scale, attract);
+  }
+
+  public setbody (x: number, y: number, widened: number, scale: number, attract: boolean = false) {
+    this.x = x;
+    this.y = y;
+
+    this.widened = widened;
+
+    this.innerWidened = widened * 0.1;
+    this.scale = scale;
+    this.attract = attract;
+  }
+
+  public getAcceleration (particle: Particle) {
+    let {
+      scale,
+      x,
+      y
+    } = particle;
+
+    // 将受力模型简化
+    let distanceX: number = twoDecimal(this.x - x);
+    if (Number.isNaN(distanceX)) {
+      debugger
+    }
+
+    let dDistanceX: number = twoDecimal(Math.pow(distanceX, 2));
+
+    let distanceY: number = twoDecimal(this.y - y);
+    let dDistanceY: number = twoDecimal(Math.pow(distanceY, 2));
+
+    let distance = Math.sqrt(dDistanceX + dDistanceY);
+
+    if (this.widened < distance) {
+      return {
+        forceX: 0,
+        forceY: 0
+      }
+    }
+
+    if (this.attract && this.innerWidened > distance) {
+      return {
+        stop: true,
+        forceX: 0,
+        forceY: 0
+      }
+    }
+
+    let m: number = twoDecimal((dDistanceX + dDistanceY) * distance);
+
+    let forceX: number = twoDecimal(5000 * scale * this.scale * distanceX / m);
+    let forceY: number = twoDecimal(5000 * scale * this.scale * distanceY / m);
+
+    // console.log(dDistanceX, dDistanceY, m, forceX, forceY)
+
+    if (this.attract) {
+      return {
+        forceX,
+        forceY
+      }
+    }
+
+    return {
+      forceX: -forceX,
+      forceY: -forceY
+    }
+
+  }
+}
+
 export default ParticleSystem;
 
 export {

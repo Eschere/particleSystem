@@ -21,27 +21,31 @@ img.onload = () => {
     },
     {
       gravity: {
-        x: 10,
-        y: 80
+        x: 0,
+        y: 0
       },
       emitterX: 200,
-      emitterY: -10,
+      emitterY: 0,
       emitterXVariance: 200,
-      emitterYVariance: 10,
+      emitterYVariance: 0,
       maxParticles: 50,
       endRotation: 2,
       endRotationVariance: 50,
-      speed: 50,
+      speed: 100,
       angle: Math.PI / 2,
-      angleVariance: Math.PI / 2,
+      angleVariance: 0,
       startSize: 15,
       startSizeVariance: 5,
-      lifespan: 5000
+      lifespan: 10000
     },
     ctx
-  ) 
+  )
 
   particle.start();
+
+  particle.addBody(300, 300, 150, 150);
+
+  // particle.addBody(100, 500, 150, 200);
 
   document.onclick = function () {
     const img: HTMLImageElement = document.createElement('img');
@@ -65,7 +69,7 @@ img.onload = () => {
         emitterYVariance: 10,
         endRotation: 0,
         endRotationVariance: 0,
-        maxParticles: 50,
+        maxParticles: 100,
         speed: 100,
         angle: Math.PI / 2,
         angleVariance: 0,

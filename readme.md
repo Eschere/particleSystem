@@ -114,3 +114,26 @@ particle.changeConfig(config)
 ```js
 particle.changeTexture(texture, textureInfo)
 ```
+
+### 增加力量体
+```js
+particle.addBody(x: number, y: number, widened: number, scale: number, attract: boolean = false)
+```
+x: 力量体位置
+y: 力量体位置
+widened: 力量作用范围
+scale: 力量作用系数
+attract: 力量作用类型，默认为false（吸引力）
+
+返回值：body，力量体
+
+### 删除力量体
+```js
+particle.addBody(body)
+```
+
+### 改变力量体属性
+```js
+body.setBody(...config)
+```
+参数列表同`addBody`
