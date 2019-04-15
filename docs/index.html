@@ -32,74 +32,130 @@
     }
 
     .form {
-      width: 1000px;
+      width: 790px;
     }
+
+    .upload {
+      position: fixed;
+      z-index: 20;
+
+      top: 20px;
+      left: 20px;
+
+      width: 50px;
+      height: 50px;
+
+    }
+
+    .upload .el-upload {
+      width: 50px;
+      height: 50px; 
+    }
+
+    .upload .el-upload-dragger {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(0, 0, 0, .5);
+    }
+
+    .upload i {
+      font-size: 50px;
+    }
+
+    .upload img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
   </style>
 </head>
 
 <body>
   <canvas id="canvas"></canvas>
   <div id="app">
+    <el-upload
+      class="upload"
+      drag
+      action=""
+      :auto-upload="false"
+      :show-file-list="false"
+      :on-change="changeTexture"
+      accept=".png,.jpg,.jpeg,.gif,.webp"
+      list-type="picture"
+    >
+      <img :src="texture" alt="" v-if="texture">
+      <i v-else class="el-icon-plus"></i>
+    </el-upload>
 
-    <el-form ref="form" label-width="200px" inline class="form">
-      <el-form-item label="纵向加速度">
-        <el-input-number v-model="config.gravity.y" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="横向加速度">
-        <el-input-number v-model="config.gravity.x" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
+    <el-collapse accordion>
+        <el-collapse-item>
+          <template slot="title">
+            配置面板<i class="header-icon el-icon-info"></i>
+          </template>
+          <el-form ref="form" label-width="150px" inline class="form">
+            <el-form-item label="纵向加速度">
+              <el-input-number v-model="config.gravity.y" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="横向加速度">
+              <el-input-number v-model="config.gravity.x" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
 
-      <el-form-item label="发射位置x">
-        <el-input-number v-model="config.emitterX" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="发射位置x浮动">
-        <el-input-number v-model="config.emitterXVariance" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
+            <el-form-item label="发射位置x">
+              <el-input-number v-model="config.emitterX" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="发射位置x浮动">
+              <el-input-number v-model="config.emitterXVariance" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
 
-      <el-form-item label="发射位置y">
-        <el-input-number v-model="config.emitterY" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="发射位置y浮动">
-        <el-input-number v-model="config.emitterYVariance" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
+            <el-form-item label="发射位置y">
+              <el-input-number v-model="config.emitterY" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="发射位置y浮动">
+              <el-input-number v-model="config.emitterYVariance" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
 
-      <el-form-item label="发射速度">
-        <el-input-number v-model="config.speed" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="发射角度">
-        <el-input-number v-model="config.angle" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="发射角度浮动">
-        <el-input-number v-model="config.angleVariance" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
+            <el-form-item label="发射速度">
+              <el-input-number v-model="config.speed" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="发射角度">
+              <el-input-number v-model="config.angle" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="发射角度浮动">
+              <el-input-number v-model="config.angleVariance" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
 
-      <el-form-item label="最大粒子数">
-        <el-input-number v-model="config.maxParticles" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="结束旋转角度">
-        <el-input-number v-model="config.endRotation" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="旋转角度浮动">
-        <el-input-number v-model="config.endRotationVariance" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
+            <el-form-item label="最大粒子数">
+              <el-input-number v-model="config.maxParticles" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="结束旋转角度">
+              <el-input-number v-model="config.endRotation" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="旋转角度浮动">
+              <el-input-number v-model="config.endRotationVariance" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
 
-      <el-form-item label="开始大小">
-        <el-input-number v-model="config.startSize" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="开始大小浮动">
-        <el-input-number v-model="config.startSizeVariance" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-form-item label="生命周期">
-        <el-input-number v-model="config.lifespan" :min="0" label="描述文字"></el-input-number>
-      </el-form-item>
-      <el-button @click="exportConfig">导出配置</el-button>
-    </el-form>
+            <el-form-item label="开始大小">
+              <el-input-number v-model="config.startSize" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="开始大小浮动">
+              <el-input-number v-model="config.startSizeVariance" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-form-item label="生命周期">
+              <el-input-number v-model="config.lifespan" :min="0" label="描述文字"></el-input-number>
+            </el-form-item>
+            <el-button @click="exportConfig">导出配置</el-button>
+          </el-form>
+        </el-collapse-item>
+    </el-collapse>
+    
+    
   </div>
 
   <script>
     new Vue({
       el: '#app',
       data: {
+        texture: './newParticle.png',
         config: {
           gravity: {
             x: 10,
@@ -160,6 +216,28 @@
           this.$alert(JSON.stringify(this.config, null, '\n'), '配置', {
             confirmButtonText: '确定',
           })
+        },
+        changeTexture (file) {
+          var reader = new FileReader()
+
+          reader.onload = () => {
+            let src = reader.result;
+
+            let img = new Image()
+
+            img.onload = () => {
+              this.particle.changeTexture(img, {
+                width: img.width,
+                height: img.height
+              })
+
+              this.texture = src
+            }
+
+            img.src = src
+          }
+
+          reader.readAsDataURL(file.raw)
         }
       },
       watch: {
