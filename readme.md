@@ -1,3 +1,6 @@
+### demo
+ [demo](https://eschere.github.io/particleSystem)
+
 ### 粒子系统
 一款基于canvas 2d的粒子系统，支持微信小程序。  
 小程序不支持获取canvas对象和其他dom操作, 所以粒子系统不包含canvas和context创建过程。
