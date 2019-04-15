@@ -273,7 +273,7 @@ class ParticleSystem {
           height = this.canvasHeight;
         } else if (this.ctx.canvas) {
           width  = this.ctx.canvas.width;
-          height = this.ctx.canvas.width;
+          height = this.ctx.canvas.height;
         }
         this.ctx.clearRect(0, 0, width, height);
         this.draw();
