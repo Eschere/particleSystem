@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "webpack-dev-server --env.TEST=test --mode-development",
-    "build": "tsc ./src/ParticleSystem.ts -t es5 --outDir dist",
+    "build": "tsc ./src/ParticleSystem.ts -t es5 --lib es6 --outDir dist",
     "build:umd": "webpack --env.PRO --mode=production"
   },
   "devDependencies": {

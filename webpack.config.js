@@ -14,7 +14,18 @@ module.exports = (env) => ({
     rules: [
       {
         test: /\.ts$/,
-        loader: 'ts-loader'
+        loader: 'ts-loader',
+        options: {
+          "compilerOptions": {
+            "target": "es5",
+            "outDir": "dist",
+            "sourceMap": true,
+            "lib": [
+              "es6",
+              "dom"
+            ],
+          }
+        }
       }
     ]
   },
